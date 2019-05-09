@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -60,6 +61,11 @@ public class PersonaC implements Serializable {
         } catch (Exception e) {
             throw e;
         }
+    }
+    
+     public List<String> completeText(String query) throws SQLException, Exception {
+        PersonaD dao = new PersonaD();
+        return dao.autocompletUbigeo(query);
     }
 
     //GETTER AND SETTER 

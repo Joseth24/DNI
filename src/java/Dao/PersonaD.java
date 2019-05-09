@@ -12,7 +12,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import modelo.PersonaM;
-import org.primefaces.json.JSONException;
 import org.primefaces.json.JSONObject;
 
 public class PersonaD extends Conexion {
@@ -55,7 +54,7 @@ public class PersonaD extends Conexion {
     public void guardar(PersonaM persona) throws Exception {
         try {
             this.conectar();
-            String sql = "";
+            String sql = "INSERT INTO PERSONA (DNI_PER,NOM_PER,APE_PAT_PER,APE_MAT_PER,FECNAC_PER,DIR_PER,SEX_PER,OBSER_PER,UBIGEO_COD_UBI) VALUES (?,?,?,?,?,?,?,?,?)";
             PreparedStatement ps = this.getCn().prepareStatement(sql);
             ps.setString(1, persona.getDNI_PER());
             ps.setString(2, persona.getNOM_PER());
@@ -84,17 +83,16 @@ public class PersonaD extends Conexion {
             lista = new ArrayList<>();
             while (rs.next()) {
                 PersonaM persona = new PersonaM();
-                persona.setCOD_PER(rs.getString(""));
-                persona.setDNI_PER(rs.getString(""));
-                persona.setDNI_PER(rs.getString(""));
-                persona.setNOM_PER(rs.getString(""));
-                persona.setAPE_PAT_MAT(rs.getString(""));
-                persona.setAPE_MAT_PER(rs.getString(""));
-                persona.setFECNAC_PER(rs.getString(""));
-                persona.setDIR_PER(rs.getString(""));
-                persona.setSEX_PER(rs.getString(""));
-                persona.setOBSER_PER(rs.getString(""));
-                persona.setCOD_UBI(rs.getString(""));
+                persona.setCOD_PER(rs.getString("CODPER"));
+                persona.setDNI_PER(rs.getString("DNI_PER"));
+                persona.setNOM_PER(rs.getString("NOM_PER"));
+                persona.setAPE_PAT_MAT(rs.getString("APE_PAT_PER"));
+                persona.setAPE_MAT_PER(rs.getString("APE_MAT_PER"));
+                persona.setFECNAC_PER(rs.getString("FECNAC_PER"));
+                persona.setDIR_PER(rs.getString("DIR_PER"));
+                persona.setSEX_PER(rs.getString("SEX_PER"));
+                persona.setOBSER_PER(rs.getString("OBSER_PER"));
+                persona.setCOD_UBI(rs.getString("COD_UBI"));
                 lista.add(persona);
             }
         } catch (SQLException e) {
@@ -104,7 +102,46 @@ public class PersonaD extends Conexion {
         }
         return lista;
     }
-    
-    
 
+    public List<String> autocompletUbigeo(String ubigeo) throws SQLException, ClassNotFoundException, Exception {
+        this.conectar();
+        ResultSet rs;
+        List<String> listaUbi;
+        try {
+            String sql = "SELECT COD_UBI,CONCAT(DEP_UBI,', ',PRO_UBI,', ',DIS_UBI) AS UBIGEO FROM UBIGEO WHERE DEP_UBI LIKE ? OR PRO_UBI LIKE ? OR DIS_UBI LIKE ?";
+            PreparedStatement ps = this.getCn().prepareCall(sql);
+            ps.setString(1, "%" + ubigeo + "%");
+            ps.setString(2, "%" + ubigeo + "%");
+            ps.setString(3, "%" + ubigeo + "%");
+            rs = ps.executeQuery();
+            listaUbi = new ArrayList();
+            while (rs.next()) {
+                listaUbi.add(rs.getString("UBIGEO"));
+            }
+            return listaUbi;
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            this.cerrar();
+        }
+    }
+
+    public String leerUbi(String ubigeo) throws Exception {
+        this.conectar();
+        ResultSet rs;
+        try {
+            String sql = "SELECT COD_UBI FROM UBIGEO WHERE CONCAT(DEP_UBI,', ',PRO_UBI,', ',DIS_UBI) = ?";
+            PreparedStatement ps = this.getCn().prepareCall(sql);
+            ps.setString(1, ubigeo);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("COD_UBI");
+            }
+            return null;
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            this.cerrar();
+        }
+    }
 }

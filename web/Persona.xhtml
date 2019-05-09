@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>PERSONA</title>
+    </h:head>
+    <h:body>
+        <h:form id="formPersona">
+            <p:panelGrid columns="2">
+                <p:inputText value="#{personaC.persona.DNI_PER}"/>
+                <h:commandButton value="CONSULTAR" actionListener="#{personaC.consultarDni()}"/>
+                <h:outputText value="NOMBRE"/>
+                <p:outputLabel value="#{personaC.persona.NOM_PER}"/>
+                <h:outputText value="APELLIDO PATERNO"/>
+                <p:outputLabel value="#{personaC.persona.APE_PAT_MAT}"/>
+                <h:outputText value="APELLIDO MATERNO"/>
+                <p:outputLabel value="#{personaC.persona.APE_MAT_PER}"/>    
+                <h:outputLabel value="FECHA NACIMIENTO"/>
+                <p:inputMask value="#{personaC.persona.FECNAC_PER}" mask="99/99/9999"/>
+                <h:outputLabel value="DIRECCIÓN"/>
+                <p:inputText value="#{personaC.persona.DIR_PER}"/>
+                <h:outputLabel value="SEXO"/>
+                <p:selectOneRadio value="#{personaC.persona.SEX_PER}">
+                    <f:selectItem itemLabel="MASCULINO" itemValue="M"/>
+                    <f:selectItem itemLabel="FEMENINO" itemValue="F"/>
+                </p:selectOneRadio>
+                <p:outputLabel value="OBSERVACIÓN"/>
+                <p:inputText value="#{personaC.persona.OBSER_PER}"/>
+                <p:outputLabel value="UBIGEO"/>
+                <p:autoComplete value="#{personaC.persona.COD_UBI}" completeMethod="#{personaC.completeText}"/>
+
+                <p:commandButton value="REGISTRAR" actionListener="#{personaC.guardarPersona()}"/>
+            </p:panelGrid>
+        </h:form>
+
+        <p:spacer/>
+
+        <h:form id="tablaPersona">
+            <p:dataTable id="tblPersona" value="#{personaC.lstPersona}" var="persona" >
+                <f:facet name="header">
+                    <h1 style="font-family: cursive">PERSONA</h1>
+                </f:facet>
+                <p:column headerText="DNI">
+                    <h:outputText value="#{persona.DNI_PER}"/>
+                </p:column>
+
+                <p:column headerText="NOMBRE">
+                    <h:outputText value="#{persona.NOM_PER}"/>
+                </p:column>
+
+                <p:column headerText="APELLIDO PATERNO">
+                    <h:outputText value="#{persona.APE_PAT_MAT}"/>
+                </p:column>
+
+                <p:column headerText="APELLIDO MATERNO">
+                    <h:outputText value="#{persona.APE_MAT_PER}"/>
+                </p:column>
+                <p:column headerText="DIRECCIÓN">
+                    <h:outputText value="#{persona.DIR_PER}"/>
+                </p:column>
+
+                <p:column headerText="FECHA NACIMIENTO">
+                    <h:outputText value="#{persona.FECNAC_PER}"/>
+                </p:column>
+
+                <p:column headerText="SEXO">
+                    <h:outputText value="#{persona.SEX_PER}"/>
+                </p:column>
+                <p:column headerText="OBSERVACIÓN">
+                    <h:outputText value="#{persona.OBSER_PER}"/>
+                </p:column>
+                <p:column headerText="UBIGEO">
+                    <h:outputText value="#{persona.COD_UBI}"/>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </h:body>
+</html>
+
